@@ -27,7 +27,7 @@ function TextoAtivi(){
   return (
     <View style={styles.body}>
       <Text/>
-      <Text style={styles.sectionTitle} >Digite seu texto aqui!</Text>
+      <Text style={styles.sectionTitle} >Digite seu texto aqui!!</Text>
       <Text />
       <TextInput 
         style={{
