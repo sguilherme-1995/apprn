@@ -2,7 +2,7 @@
 //   Pro
 // }from './material-kit-react-native-master/screens/Pro'
 
-import React, {useState} from 'react';
+import React, {Component ,useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,7 +13,9 @@ import {
   Button,
   StatusBar,
   sectionTitle,
-  Alert
+  Alert,
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 
 import {
@@ -21,58 +23,114 @@ import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
 
-function TextoAtivi(){
-  const [textoDigitado, setTextoDigitado] = useState('');
-  const [textoPostado, setTextoPostado] = useState('')
-  return (
-    <View style={styles.body}>
-      <Text/>
-      <Text style={styles.sectionTitle} >Digite seu texto aqui!!</Text>
-      <Text />
+class Contador extends Component {
+  render() {
+    return (
       <TextInput 
-        style={{
-          height: 100, 
-          borderColor: 'black', 
-          borderWidth: 2, 
-          margin: 5}}
-          placeholder="Digite aqui!"
-          multiline={true}
-          onChangeText={texto => setTextoDigitado(texto)}
-          maxLength={140}
-          value={textoDigitado}
-
-        />
-      <Button
-      onPress={() => {
-        if (textoDigitado.length < 50){
-          Alert.alert("Caracteres minimos de 50")
-        }else{
-        setTextoDigitado('')  
-        setTextoPostado(textoDigitado),
-        Alert.alert("Texto Postado!")
-        }
-      }}
-      title="Postar" color="#000000" />
-      <Text />
-      <Text style={styles.sectionTitle}>O texto que foi digitado é: </Text>
-    <Text style={styles.sectionTitle}>{textoDigitado}</Text>
-    <Text />
-    <Text />
-      <Text style={styles.sectionTitle}>Textos antigos: </Text>
-    <Text style={styles.sectionTitle}>{textoPostado}</Text>
-    </View>
-  )
+        {...this.props}
+      />
+    );
+  }
 }
+
+class Jogo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      texto: '', 
+      tempo: 10, 
+      play: false
+    }
+    this.contador;
+  }
+  componentDidMount(){
+    this.start()
+  }
+
+  start(){
+    clearInterval(this.contador)
+      this.contador = setInterval(() => {
+        this.incrementaContadador()
+      },1000
+        );
+      this.setState({play: true});
+  }
+
+  incrementaContadador(){
+      this.setState((state=>({tempo: state.tempo - 1})))
+    if(this.state.tempo === 0 ){
+      this.setState({play: false})
+      this.componentWillUnmount()
+    }
+  }
+ 
+  componentWillUnmount(){
+    clearInterval(this.contador); 
+    Alert.alert(`                   ------Parabéns------\n               A sua pontuação é ${this.state.texto.length}`)
+  }
+
+  render(){
+      return (
+        <View>
+          <Text style={styles.sectionTitle} > </Text>
+          <Text style={styles.sectionDescription}>Tempo: {this.state.tempo}</Text>
+          <Text />
+          <Contador
+          style={{
+            height: 100, 
+            borderColor: 'black', 
+            borderWidth: 4, 
+            margin: 5}}
+          numberOfLines = {5  }
+          editable={this.state.play}
+          multiline = {true}
+          placeholder='                                               Digite aqui'
+          onChangeText={(text) => this.setState({texto: text})}
+          value={this.state.texto}
+        />
+        <Text style={styles.sectionDescription}>Sua pontuação até o momento é: {this.state.texto.length}</Text>
+        <Text style={styles.sectionTitle}>-------------------------------------</Text>
+        <View style={{
+            height: 50, 
+            borderColor: '#bad1f7',
+            backgroundColor: '#2672ed', 
+            borderWidth: 2, 
+            margin: 31,
+            width:350,
+            padding: 1,
+            }}>
+         <TouchableOpacity onPress={() => {
+              this.setState({
+                texto: '', 
+                tempo: 10, 
+                play: false
+              })
+              this.start()
+          }}>
+            <Text style = {styles.sectionDescription}>
+              Clique aqui para recomeçar
+            </Text>
+         </TouchableOpacity>
+      </View> 
+        
+          
+        </View>
+      )
+  }
+  }
 
 const App = () => {
   return (
     <>
-    <SafeAreaView>
-
-    <Text style={styles.sectionTitle}> Atividade 30 (Text, TextInput, Button)</Text>
-    <Text />
-    <TextoAtivi />
-    </SafeAreaView>
+      <SafeAreaView >
+        <Text />
+        <Text />
+        <Text style={styles.sectionTitle}>Jogo da Digitação</Text>
+        <Text />
+        <Text style={styles.sectionDescription}>Digite o maximo que conseguir em 10 segundos!</Text>
+        <Jogo />
+        <Text />
+      </SafeAreaView>
     </>
   );
 };
@@ -103,7 +161,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
-    color: Colors.dark,
+    color: Colors.black,
+    textAlign: 'center',
   },
   title: {
     textAlign: 'center',
