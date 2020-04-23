@@ -81,7 +81,6 @@ class Jogo extends React.Component {
             borderColor: 'black', 
             borderWidth: 4, 
             margin: 5}}
-          numberOfLines = {5  }
           editable={this.state.play}
           multiline = {true}
           placeholder='                                               Digite aqui'
